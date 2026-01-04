@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ULTRA MULTI-VIEWER</title>
+    <style>
+        /* --- HACKER THEME CSS --- */
+        body {
+            background-color: #050505;
+            color: #0f0; /* Hacker Green */
+            font-family: 'Courier New', Courier, monospace; /* Monospace font */
+            margin: 0;
+            padding-top: 120px; /* Space for fixed header */
+        }
+
+        /* Floating Glass Header */
+        .control-panel {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            border-bottom: 2px solid #0f0;
+            padding: 15px;
+            z-index: 999;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            backdrop-filter: blur(5px);
+        }
+
+        h1 {
+            margin: 0 0 10px 0;
+            font-size: 1.5rem;
+            text-shadow: 0 0 10px #0f0;
+            letter-spacing: 2px;
+        }
+
+        .inputs {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        input {
+            background: #111;
+            border: 1px solid #333;
+            color: #0f0;
+            padding: 10px;
+            border-radius: 5px;
+            outline: none;
+            width: 150px;
+            text-align: center;
+        }
+
+        input:focus {
+            border-color: #0f0;
+            box-shadow: 0 0 10px #0f0;
+        }
+
+        /* Neon Buttons */
+        button {
+            padding: 10px 20px;
+            font-weight: bold;
+            border: 2px solid;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: 0.3s;
+        }
+
+        .btn-load {
+            background: #000;
+            color: #0f0;
+            border-color: #0f0;
+            box-shadow: 0 0 5px #0f0;
+        }
+        .btn-load:hover {
+            background: #0f0;
+            color: #000;
+            box-shadow: 0 0 20px #0f0;
+        }
+
+        .btn-clear {
+            background: #000;
+            color: #f00;
+            border-color: #f00;
+            box-shadow: 0 0 5px #f00;
+        }
+        .btn-clear:hover {
+            background: #f00;
+            color: #000;
+            box-shadow: 0 0 20px #f00;
+        }
+
+        /* Desktop Mode Toggle */
+        .mode-toggle {
+            margin-top: 10px;
+            font-size: 0.8rem;
+            color: cyan;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+        /* GRID SYSTEM */
+        #grid {
+            display: grid;
+            grid-template-columns: 1fr; /* Default Mobile: 1 Column */
+            gap: 10px;
+            padding: 10px;
+        }
+
+        /* Desktop Mode Class (Activated by JS) */
+        #grid.desktop-mode {
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        }
+
+        /* Video Container */
+        .vid-box {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 ratio */
+            border: 1px solid #333;
+            background: #000;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+        }
+        
+        .vid-box:hover {
+            border-color: cyan;
+        }
+
+        iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="control-panel">
+        <h1>SYSTEM_OVERRIDE</h1>
+        <div class="inputs">
+            <input type="text" id="vidID" placeholder="VIDEO ID">
+            <input type="number" id="count" value="4" placeholder="QTY">
+            <button class="btn-load" onclick="run()">LAUNCH</button>
+            <button class="btn-clear" onclick="wipe()">RESET</button>
+        </div>
+        <div class="mode-toggle" onclick="toggleDesktop()">[ TOGGLE DESKTOP MODE ]</div>
+    </div>
+
+    <div id="grid"></div>
+
+    <script>
+        function toggleDesktop() {
+            const grid = document.getElementById('grid');
+            grid.classList.toggle('desktop-mode');
+            
+            // Show status
+            const status = grid.classList.contains('desktop-mode') ? "DESKTOP MODE: ON" : "MOBILE MODE: ON";
+            alert(status);
+        }
+
+        function wipe() {
+            document.getElementById('grid').innerHTML = '';
+        }
+
+        function run() {
+            const grid = document.getElementById('grid');
+            let val = document.getElementById('vidID').value;
+            const num = document.getElementById('count').value;
+
+            // Extract ID
+            if(val.includes('v=')) val = val.split('v=')[1].split('&')[0];
+            if(val.includes('youtu.be/')) val = val.split('youtu.be/')[1];
+
+            if(!val) { alert("ERROR: NO ID DETECTED"); return; }
+
+            grid.innerHTML = ''; // Clear first
+
+            for(let i=0; i<num; i++) {
+                const box = document.createElement('div');
+                box.className = 'vid-box';
+                box.innerHTML = `<iframe src="https://www.youtube.com/embed/${val}?autoplay=1&mute=1" allow="autoplay"></iframe>`;
+                grid.appendChild(box);
+            }
+        }
+    </script>
+</body>
+</html>
